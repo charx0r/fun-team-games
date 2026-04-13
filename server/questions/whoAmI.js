@@ -7,7 +7,7 @@ module.exports = [
   {
     id: 'wa-1',
     roundType: 'whoAmI',
-    image: '/assets/celebrities/einstein.jpg',
+    image: '/assets/celebrities/1.jpg',
     startResolution: 6,
     endResolution: 500,
     correctAnswer: 'B',
@@ -21,7 +21,7 @@ module.exports = [
   {
     id: 'wa-2',
     roundType: 'whoAmI',
-    image: '/assets/celebrities/the-rock.jpg',
+    image: '/assets/celebrities/2.jpg',
     startResolution: 6,
     endResolution: 500,
     correctAnswer: 'C',
@@ -35,7 +35,7 @@ module.exports = [
   {
     id: 'wa-3',
     roundType: 'whoAmI',
-    image: '/assets/celebrities/attenborough.jpg',
+    image: '/assets/celebrities/3.jpg',
     startResolution: 6,
     endResolution: 500,
     correctAnswer: 'A',
@@ -49,7 +49,7 @@ module.exports = [
   {
     id: 'wa-4',
     roundType: 'whoAmI',
-    image: '/assets/celebrities/beyonce.jpg',
+    image: '/assets/celebrities/4.jpg',
     startResolution: 6,
     endResolution: 500,
     correctAnswer: 'D',

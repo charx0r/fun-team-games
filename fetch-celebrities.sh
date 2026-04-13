@@ -27,10 +27,10 @@ UA="${WIKIMEDIA_UA:-GeoQuestDeploy/1.0 (internal-team-game; contact=admin@local)
 # Pick alternatives by replacing the filename with any valid
 # "File:<name>" from commons.wikimedia.org.
 declare -A SOURCES=(
-  [einstein.jpg]="Albert_Einstein_Head.jpg"
-  [the-rock.jpg]="Dwayne_Johnson_2,_2014.jpg"
-  [attenborough.jpg]="David_Attenborough_(cropped).jpg"
-  [beyonce.jpg]="Beyonce_-_The_Formation_World_Tour,_at_Wembley_Stadium_in_London,_England.jpg"
+  [1.jpg]="Albert_Einstein_Head.jpg"
+  [2.jpg]="Dwayne_Johnson_2,_2014.jpg"
+  [3.jpg]="David_Attenborough_(cropped).jpg"
+  [4.jpg]="Beyonce_-_The_Formation_World_Tour,_at_Wembley_Stadium_in_London,_England.jpg"
 )
 
 log()  { printf "\n\033[1;36m▶ %s\033[0m\n" "$*"; }

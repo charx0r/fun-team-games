@@ -1,13 +1,18 @@
 # Round 3 — "Who Am I?" photos
 
-Drop four celebrity photos here. The names must match exactly:
+Drop four celebrity photos here. The filenames are positional — they
+map to the four questions in `server/questions/whoAmI.js` in order:
 
 ```
-einstein.jpg       # Albert Einstein — the famous tongue-out photo works great
-the-rock.jpg       # Dwayne "The Rock" Johnson — headshot or upper body
-attenborough.jpg   # David Attenborough — classic portrait
-beyonce.jpg        # Beyoncé — headshot or performance shot
+1.jpg   # Question 1 — Albert Einstein
+2.jpg   # Question 2 — Dwayne "The Rock" Johnson
+3.jpg   # Question 3 — David Attenborough
+4.jpg   # Question 4 — Beyoncé
 ```
+
+To change the celebrity for a slot, just replace the numbered file
+*and* update the matching `options` + `correctAnswer` in
+`server/questions/whoAmI.js`.
 
 ## Photo requirements
 
