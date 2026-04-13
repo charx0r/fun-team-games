@@ -27,7 +27,12 @@ export default function PixelReveal({
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  // Load the source image once per image path.
+  // Load the source image once per image path. Stamps startTimeRef
+  // synchronously in onload so the render loop (below) always sees a
+  // fresh start time paired with the new image — without this the old
+  // render loop can tick with a stale startTimeRef while React is still
+  // in the middle of flushing setLoaded(false) from a prior question,
+  // producing an "instant full reveal" on question change.
   useEffect(() => {
     setLoaded(false);
     setError(false);
@@ -35,6 +40,7 @@ export default function PixelReveal({
     img.decoding = 'async';
     img.onload = () => {
       imgRef.current = img;
+      startTimeRef.current = performance.now();
       setLoaded(true);
     };
     img.onerror = () => setError(true);
@@ -44,13 +50,9 @@ export default function PixelReveal({
     };
   }, [image]);
 
-  // Reset the start clock every time the image changes or reveal toggles off.
-  useEffect(() => {
-    if (!loaded) return;
-    startTimeRef.current = performance.now();
-  }, [loaded, image]);
-
-  // Main render loop.
+  // Main render loop. `image` is in the dep list so the loop tears down
+  // and re-establishes when moving to the next question, picking up the
+  // fresh startTimeRef set in onload above.
   useEffect(() => {
     if (!loaded) return;
     const canvas = canvasRef.current;
@@ -114,6 +116,9 @@ export default function PixelReveal({
 
     function currentResolution() {
       if (reveal) return endResolution;
+      // Safety net: if onload somehow hasn't stamped the ref yet, start
+      // the clock right now (elapsed = 0) rather than blow up to Infinity.
+      if (startTimeRef.current == null) startTimeRef.current = performance.now();
       const elapsed = (performance.now() - startTimeRef.current) / 1000;
       const progress = Math.max(0, Math.min(1, elapsed / duration));
       // Power-curve easing: resolution jumps fast early then slows through
@@ -140,7 +145,7 @@ export default function PixelReveal({
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', onResize);
     };
-  }, [loaded, reveal, duration, startResolution, endResolution]);
+  }, [loaded, reveal, duration, startResolution, endResolution, image]);
 
   if (error) {
     return (
