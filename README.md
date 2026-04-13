@@ -1,6 +1,6 @@
-# 🌍 GeoQuest
+# 🌍 Squint Games
 
-**GeoQuest** is a real-time multiplayer geography puzzle game built for in-person engineering team meetings. Everyone opens the game on their own laptop, one person creates a room, others join with a 4-character code. Teams are auto-assigned and you play 4 rounds × 4 puzzle types × 30 seconds per question — 16 questions in about 8–10 minutes.
+**Squint Games** is a real-time multiplayer geography puzzle game built for in-person engineering team meetings. Everyone opens the game on their own laptop, one person creates a room, others join with a 4-character code. Teams are auto-assigned and you play 4 rounds × 4 puzzle types × 30 seconds per question — 16 questions in about 8–10 minutes.
 
 Every player sees the same screen: the puzzle, the timer, the answer options, and the team scoreboard. No projector. No phones. Just laptops.
 
@@ -30,7 +30,7 @@ Open **http://localhost:3000** in Chrome. For teammates on the same WiFi, share 
    - **Zoom & Enhance** — starts zoomed way in, zooms out over 30s.
    - **Map Jigsaw** — a country outline drifts together from scattered pieces.
    - **What's Wrong?** — a landmark with a deliberate subtle error; hint pulses at 20s.
-6. Each question: 30s to pick A/B/C/D. Faster correct answers score more (100 base + up to 50 speed bonus).
+6. Each question: 30s to pick A/B/C/D. Faster correct answers score more (60 base + up to 90 speed bonus — speed is worth more than just being correct).
 7. Between rounds: team leaderboard. At the end: podium + MVP + confetti.
 
 ## Network setup
@@ -69,7 +69,7 @@ A single always-on container works perfectly (WebSockets supported, in-memory ro
 The script runs `az containerapp up` from the included `Dockerfile`, then pins the app to `minReplicas=1, maxReplicas=1` so there's exactly one replica running 24/7. Override defaults with env vars:
 
 ```bash
-RESOURCE_GROUP=my-rg LOCATION=westeurope APP_NAME=geoquest ./deploy-azure.sh
+RESOURCE_GROUP=my-rg LOCATION=westeurope APP_NAME=squint-games ./deploy-azure.sh
 ```
 
 At the end it prints the public HTTPS URL — share that link directly with your team (no VPN / same-WiFi needed).

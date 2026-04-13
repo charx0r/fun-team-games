@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GeoQuest VM deploy script.
+# Squint Games VM deploy script.
 #
 # Usage (as root, on a fresh Ubuntu/Debian VM):
 #   curl -fsSL <raw-url>/deploy-vm.sh -o deploy-vm.sh
@@ -8,11 +8,11 @@
 #
 # Optional env overrides:
 #   REPO_URL=https://github.com/charx0r/fun-team-games.git  (default)
-#   BRANCH=claude/geoquest-multiplayer-game-xJO5g           (default)
-#   INSTALL_DIR=/opt/geoquest                               (default)
-#   APP_USER=geoquest                                       (default)
+#   BRANCH=claude/squint-games-multiplayer-game-xJO5g           (default)
+#   INSTALL_DIR=/opt/squint-games                               (default)
+#   APP_USER=squint-games                                       (default)
 #   APP_PORT=3000                                           (default)
-#   DOMAIN=geoquest.example.com                             (enables HTTPS via Caddy)
+#   DOMAIN=squint-games.example.com                             (enables HTTPS via Caddy)
 #   EMAIL=you@example.com                                   (for Let's Encrypt, recommended)
 #
 # Idempotent: safe to re-run. Subsequent runs will git pull, rebuild, and restart.
@@ -21,9 +21,9 @@ set -euo pipefail
 
 # ---------- Config ----------
 REPO_URL="${REPO_URL:-https://github.com/charx0r/fun-team-games.git}"
-BRANCH="${BRANCH:-claude/geoquest-multiplayer-game-xJO5g}"
-INSTALL_DIR="${INSTALL_DIR:-/opt/geoquest}"
-APP_USER="${APP_USER:-geoquest}"
+BRANCH="${BRANCH:-claude/squint-games-multiplayer-game-xJO5g}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/squint-games}"
+APP_USER="${APP_USER:-squint-games}"
 APP_PORT="${APP_PORT:-3000}"
 DOMAIN="${DOMAIN:-}"
 EMAIL="${EMAIL:-}"
@@ -82,10 +82,10 @@ log "Building client"
 sudo -u "$APP_USER" bash -c "cd '$INSTALL_DIR' && npm --prefix client run build --silent"
 
 # ---------- systemd unit ----------
-log "Writing systemd unit /etc/systemd/system/geoquest.service"
-cat > /etc/systemd/system/geoquest.service <<UNIT
+log "Writing systemd unit /etc/systemd/system/squint-games.service"
+cat > /etc/systemd/system/squint-games.service <<UNIT
 [Unit]
-Description=GeoQuest game server
+Description=Squint Games game server
 After=network-online.target
 Wants=network-online.target
 
@@ -115,15 +115,15 @@ WantedBy=multi-user.target
 UNIT
 
 systemctl daemon-reload
-systemctl enable geoquest.service >/dev/null
-systemctl restart geoquest.service
+systemctl enable squint-games.service >/dev/null
+systemctl restart squint-games.service
 sleep 1
 
-if ! systemctl is-active --quiet geoquest.service; then
-  journalctl -u geoquest.service --no-pager -n 40
-  fail "geoquest.service failed to start"
+if ! systemctl is-active --quiet squint-games.service; then
+  journalctl -u squint-games.service --no-pager -n 40
+  fail "squint-games.service failed to start"
 fi
-log "geoquest.service is active"
+log "squint-games.service is active"
 
 # ---------- Firewall ----------
 if ufw status | grep -q "Status: active"; then
@@ -176,7 +176,7 @@ fi
 PUBLIC_IP="$(curl -fsS ifconfig.me || echo '<your-vm-ip>')"
 echo ""
 echo "======================================================================"
-echo "  GeoQuest is running."
+echo "  Squint Games is running."
 echo ""
 if [[ -n "$DOMAIN" ]]; then
   echo "  → https://$DOMAIN"
@@ -186,9 +186,9 @@ else
 fi
 echo ""
 echo "  Manage:"
-echo "    systemctl status  geoquest"
-echo "    systemctl restart geoquest"
-echo "    journalctl -u geoquest -f"
+echo "    systemctl status  squint-games"
+echo "    systemctl restart squint-games"
+echo "    journalctl -u squint-games -f"
 echo ""
 echo "  To update to the latest code later, just re-run this script."
 echo "======================================================================"

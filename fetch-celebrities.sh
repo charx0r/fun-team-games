@@ -3,7 +3,7 @@
 # and drop them into the running app's static assets folder.
 #
 # Run on the VM:
-#   sudo bash /opt/geoquest/fetch-celebrities.sh
+#   sudo bash /opt/squint-games/fetch-celebrities.sh
 #
 # No rebuild / restart is needed — server/index.js serves
 # /assets/celebrities/* directly from client/public/assets/celebrities/,
@@ -16,12 +16,12 @@
 
 set -euo pipefail
 
-INSTALL_DIR="${INSTALL_DIR:-/opt/geoquest}"
-APP_USER="${APP_USER:-geoquest}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/squint-games}"
+APP_USER="${APP_USER:-squint-games}"
 DEST="$INSTALL_DIR/client/public/assets/celebrities"
 
 # Wikimedia Foundation requires a descriptive User-Agent with contact info.
-UA="${WIKIMEDIA_UA:-GeoQuestDeploy/1.0 (internal-team-game; contact=admin@local)}"
+UA="${WIKIMEDIA_UA:-SquintGamesDeploy/1.0 (internal-team-game; contact=admin@local)}"
 
 # Filename on Commons (not the hash path — Special:FilePath resolves it).
 # Pick alternatives by replacing the filename with any valid

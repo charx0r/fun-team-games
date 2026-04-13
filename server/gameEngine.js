@@ -159,15 +159,19 @@ function createGameEngine(io) {
 
   function teamScores(room) {
     return room.teams.map(t => {
-      const total = t.players.reduce((sum, tp) => {
+      const sum = t.players.reduce((acc, tp) => {
         const pl = room.players.get(tp.id);
-        return sum + (pl?.score || 0);
+        return acc + (pl?.score || 0);
       }, 0);
+      // Normalize by team size so uneven splits (e.g. 6/5/5/5 at 21 players)
+      // don't give the bigger team a structural advantage. Team size is
+      // locked at assignment time, so it's stable across the whole game.
+      const size = Math.max(1, t.players.length);
       return {
         teamId: t.id,
         teamName: t.name,
         color: t.color,
-        totalScore: total,
+        totalScore: Math.round(sum / size),
       };
     });
   }
@@ -270,14 +274,17 @@ function createGameEngine(io) {
     const answers = room.answers.get(q.id) || new Map();
     const playerResults = {};
     const questionDuration = room.currentQuestionDuration || QUESTION_DURATION;
-    // Score: correct=100 + speed bonus up to 50, scaled by this question's
-    // actual duration so shorter rounds still hand out the full bonus.
+    // Score: correct = 60 flat + up to 90 speed bonus, scaled by this
+    // question's actual duration so shorter rounds still hand out the
+    // full bonus. Fastest correct = 150, buzzer-beater correct = 60.
+    // Skewing the split toward the speed bonus (60 %) makes quickness
+    // matter more than simply being correct.
     for (const [pid, entry] of answers) {
       const correct = entry.answer === q.correctAnswer;
       let pts = 0;
       if (correct) {
         const timeRemaining = entry.timeRemaining ?? 0;
-        pts = 100 + Math.round(50 * (timeRemaining / questionDuration));
+        pts = 60 + Math.round(90 * (timeRemaining / questionDuration));
       }
       entry.correct = correct;
       entry.pointsEarned = pts;
@@ -313,28 +320,34 @@ function createGameEngine(io) {
   function startRoundLeaderboard(room) {
     room.phase = PHASES.ROUND_LEADERBOARD;
     const round = ROUNDS[room.roundIndex];
-    // Compute round score: sum this round's points for each team.
-    const roundScoresByTeam = new Map();
-    for (const t of room.teams) roundScoresByTeam.set(t.id, 0);
+    // Compute round score: sum this round's points for each team, then
+    // normalize by team size to match the running totals on the bar.
+    const roundSumByTeam = new Map();
+    for (const t of room.teams) roundSumByTeam.set(t.id, 0);
     for (const q of round.questions) {
       const answers = room.answers.get(q.id);
       if (!answers) continue;
       for (const [pid, entry] of answers) {
         const pl = room.players.get(pid);
         if (!pl || !pl.teamId) continue;
-        roundScoresByTeam.set(
+        roundSumByTeam.set(
           pl.teamId,
-          (roundScoresByTeam.get(pl.teamId) || 0) + (entry.pointsEarned || 0)
+          (roundSumByTeam.get(pl.teamId) || 0) + (entry.pointsEarned || 0)
         );
       }
     }
+    const teamSizeById = new Map(
+      room.teams.map(t => [t.id, Math.max(1, t.players.length)])
+    );
     const standings = teamScores(room)
       .map(ts => ({
         teamId: ts.teamId,
         name: ts.teamName,
         color: ts.color,
         totalScore: ts.totalScore,
-        roundScore: roundScoresByTeam.get(ts.teamId) || 0,
+        roundScore: Math.round(
+          (roundSumByTeam.get(ts.teamId) || 0) / teamSizeById.get(ts.teamId)
+        ),
       }))
       .sort((a, b) => b.totalScore - a.totalScore)
       .map((t, i) => ({ ...t, rank: i + 1 }));

@@ -21,7 +21,7 @@ export default function Home({ error }) {
     <div className="screen home">
       <div className="home-card">
         <h1 className="home-title">
-          <span className="globe">🌍</span> GeoQuest
+          <span className="globe">🌍</span> Squint Games
         </h1>
         <p className="home-tag">Multiplayer geography puzzle game for team meetings</p>
 
