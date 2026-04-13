@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="skyMR" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#BFDBFE"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#skyMR)"/>
+  <!-- clouds -->
+  <ellipse cx="70" cy="60" rx="35" ry="10" fill="#F9FAFB" opacity="0.8"/>
+  <ellipse cx="340" cy="80" rx="40" ry="12" fill="#F9FAFB" opacity="0.8"/>
+  <!-- trees at base -->
+  <g>
+    <rect y="350" width="400" height="50" fill="#166534"/>
+    <polygon points="20,330 30,360 40,330" fill="#166534"/>
+    <polygon points="50,335 60,360 70,335" fill="#16A34A"/>
+    <polygon points="80,330 90,360 100,330" fill="#166534"/>
+    <polygon points="300,335 310,360 320,335" fill="#16A34A"/>
+    <polygon points="340,330 350,360 360,330" fill="#166534"/>
+  </g>
+  <!-- mountain face -->
+  <path d="M30 360 L50 150 L120 100 L180 110 L240 95 L300 110 L370 150 L390 360 Z" fill="#78716C"/>
+  <!-- cliff shading -->
+  <path d="M30 360 L50 150 L120 100 L140 360 Z" fill="#57534E" opacity="0.5"/>
+  <!-- face 1 (Washington) -->
+  <g transform="translate(70,160)">
+    <ellipse cx="20" cy="25" rx="18" ry="25" fill="#D6D3D1"/>
+    <!-- hair -->
+    <path d="M5 15 Q20 0 35 15 L35 25 L5 25 Z" fill="#A8A29E"/>
+    <!-- eyes -->
+    <circle cx="14" cy="22" r="1.5" fill="#1F2937"/>
+    <circle cx="26" cy="22" r="1.5" fill="#1F2937"/>
+    <!-- nose -->
+    <path d="M20 26 L18 32 L22 32 Z" fill="#A8A29E"/>
+    <!-- mouth -->
+    <rect x="16" y="36" width="8" height="1.5" fill="#57534E"/>
+  </g>
+  <!-- face 2 (Jefferson) -->
+  <g transform="translate(130,150)">
+    <ellipse cx="20" cy="25" rx="18" ry="25" fill="#D6D3D1"/>
+    <path d="M5 15 Q20 2 35 15 L35 22 L5 22 Z" fill="#A8A29E"/>
+    <circle cx="14" cy="22" r="1.5" fill="#1F2937"/>
+    <circle cx="26" cy="22" r="1.5" fill="#1F2937"/>
+    <path d="M20 26 L18 32 L22 32 Z" fill="#A8A29E"/>
+    <rect x="16" y="36" width="8" height="1.5" fill="#57534E"/>
+  </g>
+  <!-- face 3 (Roosevelt) -->
+  <g transform="translate(190,145)">
+    <ellipse cx="20" cy="25" rx="18" ry="25" fill="#D6D3D1"/>
+    <path d="M5 15 Q20 3 35 15 L35 22 L5 22 Z" fill="#A8A29E"/>
+    <circle cx="14" cy="22" r="1.5" fill="#1F2937"/>
+    <circle cx="26" cy="22" r="1.5" fill="#1F2937"/>
+    <!-- mustache -->
+    <rect x="14" y="33" width="12" height="2" fill="#57534E"/>
+    <path d="M20 26 L18 32 L22 32 Z" fill="#A8A29E"/>
+    <rect x="16" y="37" width="8" height="1.5" fill="#57534E"/>
+  </g>
+  <!-- face 4 (Lincoln) -->
+  <g transform="translate(250,155)">
+    <ellipse cx="20" cy="25" rx="18" ry="25" fill="#D6D3D1"/>
+    <path d="M5 15 Q20 0 35 15 L35 25 L5 25 Z" fill="#A8A29E"/>
+    <circle cx="14" cy="22" r="1.5" fill="#1F2937"/>
+    <circle cx="26" cy="22" r="1.5" fill="#1F2937"/>
+    <path d="M20 26 L18 32 L22 32 Z" fill="#A8A29E"/>
+    <!-- beard -->
+    <path d="M8 35 Q20 50 32 35 L30 42 Q20 48 10 42 Z" fill="#57534E"/>
+  </g>
+  <!-- FIFTH FACE (the edit — extra face on the right) -->
+  <g transform="translate(315,165)">
+    <ellipse cx="20" cy="25" rx="16" ry="22" fill="#D6D3D1"/>
+    <path d="M6 15 Q20 3 34 15 L34 22 L6 22 Z" fill="#A8A29E"/>
+    <circle cx="14" cy="22" r="1.5" fill="#1F2937"/>
+    <circle cx="26" cy="22" r="1.5" fill="#1F2937"/>
+    <path d="M20 26 L18 32 L22 32 Z" fill="#A8A29E"/>
+    <rect x="16" y="36" width="8" height="1.5" fill="#57534E"/>
+  </g>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="skyCR" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#FDA4AF"/>
+      <stop offset="0.5" stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#FEF3C7"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#skyCR)"/>
+  <circle cx="320" cy="110" r="35" fill="#FED7AA" opacity="0.9"/>
+  <!-- mountains -->
+  <path d="M0 320 L80 240 L180 300 L280 220 L400 310 L400 400 L0 400 Z" fill="#16A34A"/>
+  <path d="M0 360 L120 310 L240 350 L360 320 L400 340 L400 400 L0 400 Z" fill="#15803D"/>
+  <!-- pedestal -->
+  <rect x="180" y="260" width="40" height="70" fill="#9CA3AF"/>
+  <rect x="170" y="320" width="60" height="14" fill="#6B7280"/>
+  <!-- statue body (cross shape) -->
+  <g fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5">
+    <!-- arms spread horizontally -->
+    <rect x="130" y="180" width="140" height="22"/>
+    <!-- body -->
+    <rect x="190" y="180" width="20" height="80"/>
+    <!-- head -->
+    <circle cx="200" cy="170" r="12"/>
+    <!-- robe bottom (triangle) -->
+    <polygon points="180,240 220,240 230,262 170,262"/>
+  </g>
+  <!-- face -->
+  <circle cx="196" cy="170" r="1" fill="#1F2937"/>
+  <circle cx="204" cy="170" r="1" fill="#1F2937"/>
+  <!-- hand details -->
+  <circle cx="130" cy="191" r="6" fill="#F1F5F9" stroke="#94A3B8"/>
+  <circle cx="270" cy="191" r="6" fill="#F1F5F9" stroke="#94A3B8"/>
+  <!-- light/glow behind head -->
+  <circle cx="200" cy="170" r="18" fill="#FEF3C7" opacity="0.3"/>
+</svg>

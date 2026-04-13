@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="sky4" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#93C5FD"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#sky4)"/>
+  <!-- distant mountains -->
+  <path d="M0 200 L60 120 L120 180 L180 110 L250 170 L310 130 L400 180 L400 400 L0 400 Z" fill="#6B7280"/>
+  <path d="M0 240 L70 180 L140 230 L210 170 L280 220 L350 180 L400 230 L400 400 L0 400 Z" fill="#4B5563"/>
+  <!-- wall winding -->
+  <g stroke="#78350F" stroke-width="2">
+    <path d="M20 370 Q60 330 100 350 Q140 310 180 340 Q220 290 270 320 Q320 280 390 310"
+          stroke="#78350F" stroke-width="24" fill="none" stroke-linecap="round"/>
+    <path d="M20 370 Q60 330 100 350 Q140 310 180 340 Q220 290 270 320 Q320 280 390 310"
+          stroke="#B45309" stroke-width="18" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- wall battlements -->
+  <g fill="#78350F">
+    <rect x="30" y="355" width="8" height="14"/>
+    <rect x="55" y="345" width="8" height="14"/>
+    <rect x="85" y="340" width="8" height="14"/>
+    <rect x="125" y="325" width="8" height="14"/>
+    <rect x="165" y="330" width="8" height="14"/>
+    <rect x="205" y="305" width="8" height="14"/>
+    <rect x="245" y="305" width="8" height="14"/>
+    <rect x="290" y="295" width="8" height="14"/>
+    <rect x="335" y="290" width="8" height="14"/>
+    <rect x="375" y="300" width="8" height="14"/>
+  </g>
+  <!-- watchtower -->
+  <g>
+    <rect x="175" y="280" width="40" height="50" fill="#92400E"/>
+    <polygon points="170,280 220,280 215,268 175,268" fill="#78350F"/>
+    <rect x="188" y="295" width="8" height="14" fill="#1F2937"/>
+    <rect x="195" y="295" width="8" height="14" fill="#1F2937"/>
+  </g>
+  <!-- second watchtower -->
+  <g>
+    <rect x="275" y="260" width="36" height="46" fill="#92400E"/>
+    <polygon points="270,260 316,260 312,250 274,250" fill="#78350F"/>
+    <rect x="290" y="275" width="7" height="12" fill="#1F2937"/>
+  </g>
+  <circle cx="340" cy="90" r="28" fill="#FDE68A" opacity="0.9"/>
+</svg>

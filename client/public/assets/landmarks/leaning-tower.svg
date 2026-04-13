@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="skyLT" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#BFDBFE"/>
+      <stop offset="1" stop-color="#FEF3C7"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#skyLT)"/>
+  <!-- ground -->
+  <rect y="350" width="400" height="50" fill="#84CC16"/>
+  <rect y="360" width="400" height="40" fill="#65A30D"/>
+  <!-- tower leaning right -->
+  <g transform="rotate(6 220 350)">
+    <rect x="190" y="80" width="60" height="270" fill="#F3F4F6"/>
+    <rect x="185" y="340" width="70" height="14" fill="#E5E7EB"/>
+    <!-- 8 tiers of arched columns -->
+    <g fill="#F9FAFB" stroke="#9CA3AF" stroke-width="0.8">
+      <rect x="190" y="80" width="60" height="32"/>
+      <rect x="190" y="118" width="60" height="32"/>
+      <rect x="190" y="156" width="60" height="32"/>
+      <rect x="190" y="194" width="60" height="32"/>
+      <rect x="190" y="232" width="60" height="32"/>
+      <rect x="190" y="270" width="60" height="32"/>
+      <rect x="190" y="308" width="60" height="32"/>
+    </g>
+    <!-- columns (arches) per tier -->
+    <g fill="#374151">
+      <g>
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+      <g transform="translate(0,38)">
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+      <g transform="translate(0,76)">
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+      <g transform="translate(0,114)">
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+      <g transform="translate(0,152)">
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+      <g transform="translate(0,190)">
+        <rect x="196" y="90" width="3" height="16"/>
+        <rect x="206" y="90" width="3" height="16"/>
+        <rect x="216" y="90" width="3" height="16"/>
+        <rect x="226" y="90" width="3" height="16"/>
+        <rect x="236" y="90" width="3" height="16"/>
+      </g>
+    </g>
+    <!-- base arch -->
+    <rect x="210" y="320" width="20" height="30" fill="#1F2937"/>
+    <!-- bell tower top -->
+    <rect x="200" y="60" width="40" height="24" fill="#E5E7EB" stroke="#9CA3AF"/>
+    <rect x="215" y="50" width="10" height="14" fill="#F59E0B"/>
+  </g>
+  <circle cx="320" cy="90" r="30" fill="#FEF3C7" opacity="0.9"/>
+</svg>

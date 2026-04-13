@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="skyTB" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#93C5FD"/>
+      <stop offset="1" stop-color="#DBEAFE"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#skyTB)"/>
+  <!-- water -->
+  <rect y="300" width="400" height="100" fill="#1D4ED8"/>
+  <g stroke="#60A5FA" stroke-width="1" fill="none">
+    <path d="M0 320 Q40 315 80 320 T160 320 T240 320 T320 320 T400 320"/>
+    <path d="M0 350 Q40 345 80 350 T160 350 T240 350 T320 350 T400 350"/>
+    <path d="M0 375 Q40 370 80 375 T160 375 T240 375 T320 375 T400 375"/>
+  </g>
+  <!-- LEFT TOWER (made taller — the edit) -->
+  <g>
+    <!-- base -->
+    <rect x="90" y="230" width="50" height="70" fill="#4B5563"/>
+    <!-- main tower (taller than right) -->
+    <rect x="95" y="90" width="40" height="140" fill="#6B7280"/>
+    <!-- windows -->
+    <g fill="#FEF3C7">
+      <rect x="105" y="110" width="8" height="12"/>
+      <rect x="117" y="110" width="8" height="12"/>
+      <rect x="105" y="130" width="8" height="12"/>
+      <rect x="117" y="130" width="8" height="12"/>
+      <rect x="105" y="150" width="8" height="12"/>
+      <rect x="117" y="150" width="8" height="12"/>
+      <rect x="105" y="180" width="8" height="12"/>
+      <rect x="117" y="180" width="8" height="12"/>
+      <rect x="105" y="200" width="8" height="12"/>
+      <rect x="117" y="200" width="8" height="12"/>
+    </g>
+    <!-- roof -->
+    <polygon points="90,90 140,90 138,72 92,72" fill="#1F2937"/>
+    <polygon points="92,72 138,72 115,45" fill="#1E40AF"/>
+    <polygon points="110,45 120,45 115,20" fill="#1E40AF"/>
+    <rect x="113" y="18" width="4" height="4" fill="#EAB308"/>
+  </g>
+  <!-- RIGHT TOWER (shorter — correct classic height) -->
+  <g>
+    <rect x="260" y="230" width="50" height="70" fill="#4B5563"/>
+    <rect x="265" y="140" width="40" height="90" fill="#6B7280"/>
+    <g fill="#FEF3C7">
+      <rect x="275" y="155" width="8" height="12"/>
+      <rect x="287" y="155" width="8" height="12"/>
+      <rect x="275" y="175" width="8" height="12"/>
+      <rect x="287" y="175" width="8" height="12"/>
+      <rect x="275" y="200" width="8" height="12"/>
+      <rect x="287" y="200" width="8" height="12"/>
+    </g>
+    <polygon points="260,140 310,140 308,122 262,122" fill="#1F2937"/>
+    <polygon points="262,122 308,122 285,95" fill="#1E40AF"/>
+    <polygon points="280,95 290,95 285,70" fill="#1E40AF"/>
+    <rect x="283" y="68" width="4" height="4" fill="#EAB308"/>
+  </g>
+  <!-- walkways between towers -->
+  <rect x="135" y="110" width="130" height="10" fill="#D97706"/>
+  <rect x="135" y="140" width="130" height="10" fill="#D97706"/>
+  <!-- suspension chains to shore -->
+  <path d="M0 260 Q50 220 95 250" stroke="#1F2937" stroke-width="2" fill="none"/>
+  <path d="M305 250 Q350 220 400 260" stroke="#1F2937" stroke-width="2" fill="none"/>
+  <!-- bridge deck -->
+  <rect x="0" y="280" width="400" height="20" fill="#78350F"/>
+  <rect x="140" y="270" width="120" height="30" fill="#92400E"/>
+</svg>

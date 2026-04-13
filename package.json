@@ -1,0 +1,15 @@
+{
+  "name": "geo-quest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GeoQuest - Multiplayer Geography Puzzle Game for team meetings",
+  "scripts": {
+    "dev": "concurrently -k -n server,client -c cyan,magenta \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server install && npm --prefix client install && npm --prefix client run build && npm --prefix server start",
+    "install-all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
