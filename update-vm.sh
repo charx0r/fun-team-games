@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# GeoQuest VM update script.
+# Pulls the latest code, rebuilds only what changed, restarts the service.
+#
+# Usage (as root, on the VM after deploy-vm.sh has already run):
+#   sudo ./update-vm.sh
+#
+# Optional env overrides:
+#   BRANCH=some-other-branch     (default: whatever the repo is currently on)
+#   INSTALL_DIR=/opt/geoquest    (default)
+#   APP_USER=geoquest            (default)
+#   SERVICE=geoquest             (default systemd unit)
+#   FORCE_REINSTALL=1            (always npm ci even if lockfiles unchanged)
+
+set -euo pipefail
+
+INSTALL_DIR="${INSTALL_DIR:-/opt/geoquest}"
+APP_USER="${APP_USER:-geoquest}"
+SERVICE="${SERVICE:-geoquest}"
+FORCE_REINSTALL="${FORCE_REINSTALL:-0}"
+
+log()  { printf "\n\033[1;36m▶ %s\033[0m\n" "$*"; }
+ok()   { printf "\033[1;32m✓ %s\033[0m\n" "$*"; }
+warn() { printf "\033[1;33m! %s\033[0m\n" "$*"; }
+fail() { printf "\033[1;31m✗ %s\033[0m\n" "$*" >&2; exit 1; }
+
+[[ $EUID -eq 0 ]] || fail "Must run as root (use sudo)."
+[[ -d "$INSTALL_DIR/.git" ]] || fail "No git checkout at $INSTALL_DIR — run deploy-vm.sh first."
+id -u "$APP_USER" >/dev/null 2>&1 || fail "User '$APP_USER' not found — run deploy-vm.sh first."
+
+cd "$INSTALL_DIR"
+BRANCH="${BRANCH:-$(sudo -u "$APP_USER" git rev-parse --abbrev-ref HEAD)}"
+
+# ---------- Fetch + detect changes ----------
+log "Checking for updates on branch '$BRANCH'"
+OLD_SHA="$(sudo -u "$APP_USER" git rev-parse HEAD)"
+sudo -u "$APP_USER" git fetch --prune origin "$BRANCH"
+NEW_SHA="$(sudo -u "$APP_USER" git rev-parse "origin/$BRANCH")"
+
+if [[ "$OLD_SHA" == "$NEW_SHA" ]] && [[ "$FORCE_REINSTALL" != "1" ]]; then
+  ok "Already up to date (HEAD=$OLD_SHA). Nothing to do."
+  systemctl is-active --quiet "$SERVICE" && ok "$SERVICE is running." || warn "$SERVICE is not running — starting it."
+  systemctl start "$SERVICE" || true
+  exit 0
+fi
+
+echo "  $OLD_SHA → $NEW_SHA"
+echo "  Changed files:"
+sudo -u "$APP_USER" git diff --name-only "$OLD_SHA" "$NEW_SHA" | sed 's/^/    /'
+
+# ---------- Pull ----------
+log "Resetting working tree to origin/$BRANCH"
+sudo -u "$APP_USER" git checkout "$BRANCH"
+sudo -u "$APP_USER" git reset --hard "origin/$BRANCH"
+
+# ---------- Re-install deps only if manifests changed ----------
+CHANGED_FILES="$(git diff --name-only "$OLD_SHA" "$NEW_SHA")"
+
+server_deps_changed=0
+client_deps_changed=0
+if echo "$CHANGED_FILES" | grep -qE '^server/(package\.json|package-lock\.json)$'; then
+  server_deps_changed=1
+fi
+if echo "$CHANGED_FILES" | grep -qE '^client/(package\.json|package-lock\.json)$'; then
+  client_deps_changed=1
+fi
+
+if [[ "$FORCE_REINSTALL" == "1" ]]; then
+  server_deps_changed=1
+  client_deps_changed=1
+fi
+
+if [[ "$server_deps_changed" == "1" ]]; then
+  log "Reinstalling server dependencies"
+  sudo -u "$APP_USER" bash -c "cd '$INSTALL_DIR' && npm --prefix server ci --omit=dev --silent"
+else
+  ok "Server deps unchanged — skipping npm ci"
+fi
+
+if [[ "$client_deps_changed" == "1" ]]; then
+  log "Reinstalling client dependencies"
+  sudo -u "$APP_USER" bash -c "cd '$INSTALL_DIR' && npm --prefix client ci --silent"
+else
+  ok "Client deps unchanged — skipping npm ci"
+fi
+
+# ---------- Rebuild client (always; cheap + catches source changes) ----------
+log "Rebuilding client"
+sudo -u "$APP_USER" bash -c "cd '$INSTALL_DIR' && npm --prefix client run build --silent"
+
+# ---------- Restart service ----------
+log "Restarting $SERVICE"
+systemctl restart "$SERVICE"
+sleep 1
+
+if systemctl is-active --quiet "$SERVICE"; then
+  ok "$SERVICE restarted and is active."
+else
+  journalctl -u "$SERVICE" --no-pager -n 40
+  fail "$SERVICE failed to start after update."
+fi
+
+# ---------- Summary ----------
+echo ""
+echo "======================================================================"
+ok "Update complete."
+echo "  from: $OLD_SHA"
+echo "  to:   $NEW_SHA"
+echo ""
+echo "  Tail logs:   journalctl -u $SERVICE -f"
+echo "======================================================================"
