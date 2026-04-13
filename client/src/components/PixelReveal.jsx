@@ -121,13 +121,10 @@ export default function PixelReveal({
       if (startTimeRef.current == null) startTimeRef.current = performance.now();
       const elapsed = (performance.now() - startTimeRef.current) / 1000;
       const progress = Math.max(0, Math.min(1, elapsed / duration));
-      // Power-curve easing: resolution jumps fast early then slows through
-      // the middle and end. Makes the silhouette + colour blobs resolve
-      // quickly so players can start locking guesses, while fine features
-      // trickle in right up to the timer so early-guessers can still be
-      // wrong.
-      const eased = Math.pow(progress, 0.4);
-      return startResolution + (endResolution - startResolution) * eased;
+      // Log-space interpolation so each visible "step" feels even.
+      const logStart = Math.log(startResolution);
+      const logEnd = Math.log(endResolution);
+      return Math.exp(logStart + (logEnd - logStart) * progress);
     }
 
     function frame() {
