@@ -228,11 +228,15 @@ function createGameEngine(io) {
   function startQuestion(room) {
     const round = ROUNDS[room.roundIndex];
     const q = round.questions[room.questionIndex];
+    // Per-round duration override (e.g. round 3 is tighter). Falls back
+    // to the global QUESTION_DURATION (itself env-overridable).
+    const effectiveDuration = Math.max(1, Math.min(round.duration ?? QUESTION_DURATION, QUESTION_DURATION));
     room.phase = PHASES.QUESTION_ACTIVE;
     room.currentQuestion = q;
+    room.currentQuestionDuration = effectiveDuration;
     room.questionStartTs = Date.now();
     room.answers.set(q.id, new Map());
-    room.timerRemaining = QUESTION_DURATION;
+    room.timerRemaining = effectiveDuration;
 
     broadcast(room, 'question-start', {
       questionId: q.id,
@@ -242,7 +246,7 @@ function createGameEngine(io) {
       roundName: round.name,
       roundType: q.roundType,
       options: q.options,
-      duration: QUESTION_DURATION,
+      duration: effectiveDuration,
       visualData: publicVisualData(q),
     });
     broadcast(room, 'timer-tick', { remaining: room.timerRemaining });
@@ -265,13 +269,15 @@ function createGameEngine(io) {
     room.phase = PHASES.QUESTION_REVEAL;
     const answers = room.answers.get(q.id) || new Map();
     const playerResults = {};
-    // Score: correct=100 + speed bonus up to 50.
+    const questionDuration = room.currentQuestionDuration || QUESTION_DURATION;
+    // Score: correct=100 + speed bonus up to 50, scaled by this question's
+    // actual duration so shorter rounds still hand out the full bonus.
     for (const [pid, entry] of answers) {
       const correct = entry.answer === q.correctAnswer;
       let pts = 0;
       if (correct) {
         const timeRemaining = entry.timeRemaining ?? 0;
-        pts = 100 + Math.round(50 * (timeRemaining / QUESTION_DURATION));
+        pts = 100 + Math.round(50 * (timeRemaining / questionDuration));
       }
       entry.correct = correct;
       entry.pointsEarned = pts;

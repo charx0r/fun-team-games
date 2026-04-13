@@ -27,6 +27,9 @@ const ROUNDS = [
     description:
       "A famous face is hidden behind pixels. It'll slowly come into focus — how early can you guess?",
     questions: whoAmI,
+    // Celebrities become recognisable faster than a scrambled landmark —
+    // tighter clock keeps the round snappy.
+    duration: 20,
   },
   {
     number: 4,
