@@ -29,13 +29,18 @@ fail() { printf "\033[1;31m✗ %s\033[0m\n" "$*" >&2; exit 1; }
 id -u "$APP_USER" >/dev/null 2>&1 || fail "User '$APP_USER' not found — run deploy-vm.sh first."
 
 cd "$INSTALL_DIR"
-BRANCH="${BRANCH:-$(sudo -u "$APP_USER" git rev-parse --abbrev-ref HEAD)}"
+# Ensure the repo's full history is available — deploy-vm.sh originally
+# did a shallow clone which caused "Could not access <SHA>" failures on
+# subsequent diffs. `git fetch --unshallow` is a no-op if already complete.
+sudo -u "$APP_USER" git -C "$INSTALL_DIR" fetch --unshallow 2>/dev/null || true
+
+BRANCH="${BRANCH:-$(sudo -u "$APP_USER" git -C "$INSTALL_DIR" rev-parse --abbrev-ref HEAD)}"
 
 # ---------- Fetch + detect changes ----------
 log "Checking for updates on branch '$BRANCH'"
-OLD_SHA="$(sudo -u "$APP_USER" git rev-parse HEAD)"
-sudo -u "$APP_USER" git fetch --prune origin "$BRANCH"
-NEW_SHA="$(sudo -u "$APP_USER" git rev-parse "origin/$BRANCH")"
+OLD_SHA="$(sudo -u "$APP_USER" git -C "$INSTALL_DIR" rev-parse HEAD)"
+sudo -u "$APP_USER" git -C "$INSTALL_DIR" fetch --prune origin "$BRANCH"
+NEW_SHA="$(sudo -u "$APP_USER" git -C "$INSTALL_DIR" rev-parse "origin/$BRANCH")"
 
 if [[ "$OLD_SHA" == "$NEW_SHA" ]] && [[ "$FORCE_REINSTALL" != "1" ]]; then
   ok "Already up to date (HEAD=$OLD_SHA). Nothing to do."
@@ -45,17 +50,27 @@ if [[ "$OLD_SHA" == "$NEW_SHA" ]] && [[ "$FORCE_REINSTALL" != "1" ]]; then
 fi
 
 echo "  $OLD_SHA → $NEW_SHA"
-echo "  Changed files:"
-sudo -u "$APP_USER" git diff --name-only "$OLD_SHA" "$NEW_SHA" | sed 's/^/    /'
+
+# Compute the diff BEFORE reset while both SHAs are reachable, and as the
+# repo-owning user so object access is unambiguous. Tolerate failure — a
+# shallow-clone boundary or a force-push can make OLD_SHA inaccessible,
+# which shouldn't halt the update; in that case we conservatively assume
+# dependency manifests may have changed and reinstall to be safe.
+CHANGED_FILES="$(sudo -u "$APP_USER" git -C "$INSTALL_DIR" diff --name-only "$OLD_SHA" "$NEW_SHA" 2>/dev/null || true)"
+if [[ -n "$CHANGED_FILES" ]]; then
+  echo "  Changed files:"
+  echo "$CHANGED_FILES" | sed 's/^/    /'
+else
+  warn "Couldn't diff $OLD_SHA..$NEW_SHA (shallow clone or missing object). Forcing full reinstall."
+  FORCE_REINSTALL=1
+fi
 
 # ---------- Pull ----------
 log "Resetting working tree to origin/$BRANCH"
-sudo -u "$APP_USER" git checkout "$BRANCH"
-sudo -u "$APP_USER" git reset --hard "origin/$BRANCH"
+sudo -u "$APP_USER" git -C "$INSTALL_DIR" checkout "$BRANCH"
+sudo -u "$APP_USER" git -C "$INSTALL_DIR" reset --hard "origin/$BRANCH"
 
 # ---------- Re-install deps only if manifests changed ----------
-CHANGED_FILES="$(git diff --name-only "$OLD_SHA" "$NEW_SHA")"
-
 server_deps_changed=0
 client_deps_changed=0
 if echo "$CHANGED_FILES" | grep -qE '^server/(package\.json|package-lock\.json)$'; then
