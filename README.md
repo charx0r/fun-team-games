@@ -30,7 +30,7 @@ Open **http://localhost:3000** in Chrome. For teammates on the same WiFi, share 
    - **Zoom & Enhance** — starts zoomed way in, zooms out over 30s.
    - **Map Jigsaw** — a country outline drifts together from scattered pieces.
    - **What's Wrong?** — a landmark with a deliberate subtle error; hint pulses at 20s.
-6. Each question: 30s to pick A/B/C/D. Faster correct answers score more (100 base + up to 50 speed bonus).
+6. Each question: 30s to pick A/B/C/D. Faster correct answers score more (60 base + up to 90 speed bonus — speed is worth more than just being correct).
 7. Between rounds: team leaderboard. At the end: podium + MVP + confetti.
 
 ## Network setup

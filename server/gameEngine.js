@@ -274,14 +274,17 @@ function createGameEngine(io) {
     const answers = room.answers.get(q.id) || new Map();
     const playerResults = {};
     const questionDuration = room.currentQuestionDuration || QUESTION_DURATION;
-    // Score: correct=100 + speed bonus up to 50, scaled by this question's
-    // actual duration so shorter rounds still hand out the full bonus.
+    // Score: correct = 60 flat + up to 90 speed bonus, scaled by this
+    // question's actual duration so shorter rounds still hand out the
+    // full bonus. Fastest correct = 150, buzzer-beater correct = 60.
+    // Skewing the split toward the speed bonus (60 %) makes quickness
+    // matter more than simply being correct.
     for (const [pid, entry] of answers) {
       const correct = entry.answer === q.correctAnswer;
       let pts = 0;
       if (correct) {
         const timeRemaining = entry.timeRemaining ?? 0;
-        pts = 100 + Math.round(50 * (timeRemaining / questionDuration));
+        pts = 60 + Math.round(90 * (timeRemaining / questionDuration));
       }
       entry.correct = correct;
       entry.pointsEarned = pts;
