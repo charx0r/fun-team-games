@@ -5,10 +5,10 @@
 
 set -euo pipefail
 
-RESOURCE_GROUP="${RESOURCE_GROUP:-geoquest-rg}"
+RESOURCE_GROUP="${RESOURCE_GROUP:-squint-games-rg}"
 LOCATION="${LOCATION:-eastus}"
-ENV_NAME="${ENV_NAME:-geoquest-env}"
-APP_NAME="${APP_NAME:-geoquest}"
+ENV_NAME="${ENV_NAME:-squint-games-env}"
+APP_NAME="${APP_NAME:-squint-games}"
 
 echo "→ Resource group:   $RESOURCE_GROUP ($LOCATION)"
 echo "→ Container env:    $ENV_NAME"

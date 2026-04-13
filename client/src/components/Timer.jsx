@@ -2,14 +2,14 @@ import React from 'react';
 
 export default function Timer({ remaining, total = 30 }) {
   const color =
-    remaining <= 10 ? '#EF4444' : remaining <= 15 ? '#EAB308' : '#10B981';
+    remaining <= 10 ? '#E8345A' : remaining <= 15 ? '#F5C542' : '#2ECDA7';
   const pct = Math.max(0, Math.min(1, remaining / total));
   const circumference = 2 * Math.PI * 20;
   const dash = circumference * pct;
   return (
     <div className="timer" style={{ color }}>
       <svg width="52" height="52" viewBox="0 0 50 50">
-        <circle cx="25" cy="25" r="20" fill="none" stroke="#334155" strokeWidth="4" />
+        <circle cx="25" cy="25" r="20" fill="none" stroke="#1a1a1a" strokeWidth="4" />
         <circle
           cx="25"
           cy="25"

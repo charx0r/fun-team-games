@@ -26,7 +26,7 @@ export default function Lobby({ ctx }) {
         <div className="player-grid">
           {players.map(p => (
             <div key={p.id} className={`player-chip ${p.id === playerId ? 'me' : ''}`}>
-              <span className="dot" style={{ background: p.connected ? '#10B981' : '#6B7280' }} />
+              <span className="dot" style={{ background: p.connected ? '#2ECDA7' : '#6B6560' }} />
               {p.name}
               {p.isAdmin && <span className="admin-tag">admin</span>}
               {p.id === playerId && <span className="you-tag">you</span>}

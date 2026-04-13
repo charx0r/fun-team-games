@@ -28,7 +28,7 @@ app.get('/health', (_req, res) => res.json({ ok: true, rooms: engine.rooms.size 
 
 app.get('*', (_req, res) => {
   res.sendFile(path.join(clientDist, 'index.html'), err => {
-    if (err) res.status(200).send('GeoQuest server running. Build the client with `npm run build`.');
+    if (err) res.status(200).send('Squint Games server running. Build the client with `npm run build`.');
   });
 });
 
@@ -112,7 +112,7 @@ io.on('connection', socket => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🌍 GeoQuest server running on port ${PORT}`);
+  console.log(`\n🌍 Squint Games server running on port ${PORT}`);
   console.log(`   Local:   http://localhost:${PORT}`);
   console.log(`   Network: find your LAN IP and share http://<your-ip>:${PORT}\n`);
 });

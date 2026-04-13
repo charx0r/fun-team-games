@@ -2,10 +2,10 @@
 // 4-8 players => 2 teams, 9-12 => 3 teams, 13+ => 4 teams.
 
 const TEAM_DEFS = [
-  { id: 'team-1', name: 'Globe Trotters', color: '#3B82F6' },
-  { id: 'team-2', name: 'Map Maniacs', color: '#10B981' },
-  { id: 'team-3', name: 'Compass Kings', color: '#F59E0B' },
-  { id: 'team-4', name: 'Atlas Aces', color: '#8B5CF6' },
+  { id: 'team-1', name: 'Globe Trotters', color: '#2ECDA7' },
+  { id: 'team-2', name: 'Map Maniacs', color: '#F5C542' },
+  { id: 'team-3', name: 'Compass Kings', color: '#7B6EF6' },
+  { id: 'team-4', name: 'Atlas Aces', color: '#F28C5A' },
 ];
 
 function numTeamsFor(count) {

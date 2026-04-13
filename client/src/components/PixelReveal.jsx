@@ -108,7 +108,7 @@ export default function PixelReveal({
       offCtx.drawImage(img, 0, 0, sampleW, sampleH);
 
       // Chunky upscale onto the visible canvas.
-      ctx.fillStyle = '#1E293B';
+      ctx.fillStyle = '#161616';
       ctx.fillRect(0, 0, w, h);
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(off, 0, 0, sampleW, sampleH, offsetX, offsetY, drawW, drawH);

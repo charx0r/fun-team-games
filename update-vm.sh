@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GeoQuest VM update script.
+# Squint Games VM update script.
 # Pulls the latest code, rebuilds only what changed, restarts the service.
 #
 # Usage (as root, on the VM after deploy-vm.sh has already run):
@@ -7,16 +7,16 @@
 #
 # Optional env overrides:
 #   BRANCH=some-other-branch     (default: whatever the repo is currently on)
-#   INSTALL_DIR=/opt/geoquest    (default)
-#   APP_USER=geoquest            (default)
-#   SERVICE=geoquest             (default systemd unit)
+#   INSTALL_DIR=/opt/squint-games    (default)
+#   APP_USER=squint-games            (default)
+#   SERVICE=squint-games             (default systemd unit)
 #   FORCE_REINSTALL=1            (always npm ci even if lockfiles unchanged)
 
 set -euo pipefail
 
-INSTALL_DIR="${INSTALL_DIR:-/opt/geoquest}"
-APP_USER="${APP_USER:-geoquest}"
-SERVICE="${SERVICE:-geoquest}"
+INSTALL_DIR="${INSTALL_DIR:-/opt/squint-games}"
+APP_USER="${APP_USER:-squint-games}"
+SERVICE="${SERVICE:-squint-games}"
 FORCE_REINSTALL="${FORCE_REINSTALL:-0}"
 
 log()  { printf "\n\033[1;36m▶ %s\033[0m\n" "$*"; }

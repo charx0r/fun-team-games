@@ -1,8 +1,8 @@
 {
-  "name": "geo-quest",
+  "name": "squint-games",
   "version": "1.0.0",
   "private": true,
-  "description": "GeoQuest - Multiplayer Geography Puzzle Game for team meetings",
+  "description": "Squint Games - Multiplayer Geography Puzzle Game for team meetings",
   "scripts": {
     "dev": "concurrently -k -n server,client -c cyan,magenta \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
     "build": "npm --prefix client run build",
