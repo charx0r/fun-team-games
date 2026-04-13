@@ -1,6 +1,6 @@
 const scrambledSatellite = require('./scrambledSatellite');
 const zoomEnhance = require('./zoomEnhance');
-const mapJigsaw = require('./mapJigsaw');
+const whoAmI = require('./whoAmI');
 const whatsWrong = require('./whatsWrong');
 
 const ROUNDS = [
@@ -22,11 +22,11 @@ const ROUNDS = [
   },
   {
     number: 3,
-    name: 'Map Jigsaw',
-    type: 'jigsaw',
+    name: 'Who Am I?',
+    type: 'whoAmI',
     description:
-      'A country\'s outline has been cut up and scattered. What country is it?',
-    questions: mapJigsaw,
+      "A famous face is hidden behind pixels. It'll slowly come into focus — how early can you guess?",
+    questions: whoAmI,
   },
   {
     number: 4,
@@ -49,12 +49,11 @@ function publicVisualData(q) {
         zoomOrigin: q.zoomOrigin,
         initialZoom: q.initialZoom,
       };
-    case 'jigsaw':
+    case 'whoAmI':
       return {
-        pieces: q.pieces,
-        viewBox: q.viewBox,
-        shuffleSeed: q.shuffleSeed,
-        country: q.country,
+        image: q.image,
+        startResolution: q.startResolution,
+        endResolution: q.endResolution,
       };
     case 'whatsWrong':
       return { image: q.image, hintZone: q.hintZone };

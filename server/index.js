@@ -4,6 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const { createGameEngine } = require('./gameEngine');
+const { publicVisualData } = require('./questions');
 
 const PORT = process.env.PORT || 3000;
 
@@ -73,16 +74,7 @@ io.on('connection', socket => {
           roundType: q.roundType,
           options: q.options,
           duration: 30,
-          visualData: {
-            image: q.image,
-            shuffleSeed: q.shuffleSeed,
-            zoomOrigin: q.zoomOrigin,
-            initialZoom: q.initialZoom,
-            pieces: q.pieces,
-            viewBox: q.viewBox,
-            hintZone: q.hintZone,
-            country: q.country,
-          },
+          visualData: publicVisualData(q),
         });
         socket.emit('timer-tick', { remaining: room.timerRemaining });
       }

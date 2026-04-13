@@ -6,7 +6,7 @@ import AnswerButtons from '../components/AnswerButtons.jsx';
 import TeamScoreBar from '../components/TeamScoreBar.jsx';
 import ScrambledGrid from '../components/ScrambledGrid.jsx';
 import ZoomReveal from '../components/ZoomReveal.jsx';
-import JigsawPuzzle from '../components/JigsawPuzzle.jsx';
+import PixelReveal from '../components/PixelReveal.jsx';
 import SpotDifference from '../components/SpotDifference.jsx';
 import { sounds } from '../sounds.js';
 
@@ -115,11 +115,11 @@ export default function Game({ ctx, phase }) {
               reveal={phase === 'reveal'}
             />
           )}
-          {question.roundType === 'jigsaw' && (
-            <JigsawPuzzle
-              pieces={question.visualData.pieces}
-              viewBox={question.visualData.viewBox}
-              seed={question.visualData.shuffleSeed}
+          {question.roundType === 'whoAmI' && (
+            <PixelReveal
+              image={question.visualData.image}
+              startResolution={question.visualData.startResolution}
+              endResolution={question.visualData.endResolution}
               duration={question.duration}
               reveal={phase === 'reveal'}
             />

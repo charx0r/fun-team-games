@@ -3,7 +3,7 @@ import React from 'react';
 const ICONS = {
   scrambled: '🧩',
   zoom: '🔍',
-  jigsaw: '🗺️',
+  whoAmI: '👤',
   whatsWrong: '🕵️',
 };
 
