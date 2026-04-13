@@ -57,6 +57,29 @@ Each file exports an array of question objects. The format is documented inline 
 
 The server NEVER sends `correctAnswer` until after the timer expires, so answers can't be peeked via devtools.
 
+## Deploy to Azure Container Apps
+
+A single always-on container works perfectly (WebSockets supported, in-memory rooms stay put).
+
+```bash
+# one-time: az login && az account set --subscription <your-sub-id>
+./deploy-azure.sh
+```
+
+The script runs `az containerapp up` from the included `Dockerfile`, then pins the app to `minReplicas=1, maxReplicas=1` so there's exactly one replica running 24/7. Override defaults with env vars:
+
+```bash
+RESOURCE_GROUP=my-rg LOCATION=westeurope APP_NAME=geoquest ./deploy-azure.sh
+```
+
+At the end it prints the public HTTPS URL — share that link directly with your team (no VPN / same-WiFi needed).
+
+### Notes
+
+- **Don't scale beyond 1 replica** without adding the Socket.IO Redis adapter — rooms live in-memory on a single container.
+- **Consumption plan** works; billing is roughly CPU/memory × uptime. One small replica pinned on is a few dollars/month.
+- WebSockets work out of the box on ACA's HTTP ingress — no extra config needed.
+
 ## Tech stack
 
 - **Server**: Node.js + Express + Socket.IO (in-memory state, no DB)
