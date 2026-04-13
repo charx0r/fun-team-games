@@ -1,11 +1,37 @@
 const { ROUNDS, publicVisualData } = require('./questions');
 const { assignTeams } = require('./teamAssigner');
 
-const QUESTION_DURATION = 30; // seconds
-const TEAM_ASSIGN_DURATION = 5;
-const ROUND_INTRO_DURATION = 4;
-const QUESTION_REVEAL_DURATION = 5;
-const ROUND_LEADERBOARD_DURATION = 6;
+// Configurable phase durations. Override via env vars to shorten the loop
+// when iterating on a single round.
+const envInt = (name, fallback) => {
+  const v = parseInt(process.env[name], 10);
+  return Number.isFinite(v) && v >= 0 ? v : fallback;
+};
+const QUESTION_DURATION = envInt('QUESTION_DURATION', 30);
+const TEAM_ASSIGN_DURATION = envInt('TEAM_ASSIGN_DURATION', 5);
+const ROUND_INTRO_DURATION = envInt('ROUND_INTRO_DURATION', 4);
+const QUESTION_REVEAL_DURATION = envInt('QUESTION_REVEAL_DURATION', 5);
+const ROUND_LEADERBOARD_DURATION = envInt('ROUND_LEADERBOARD_DURATION', 6);
+
+// Dev aid: START_ROUND=3 skips to the 3rd round after team assignment.
+// Preceding rounds are simply not played; final scores still work normally.
+const START_ROUND_INDEX = Math.max(
+  0,
+  Math.min(ROUNDS.length - 1, envInt('START_ROUND', 1) - 1),
+);
+if (
+  START_ROUND_INDEX !== 0 ||
+  QUESTION_DURATION !== 30 ||
+  TEAM_ASSIGN_DURATION !== 5 ||
+  ROUND_INTRO_DURATION !== 4
+) {
+  console.warn(
+    `[dev] phase overrides: START_ROUND=${START_ROUND_INDEX + 1} ` +
+    `QUESTION_DURATION=${QUESTION_DURATION}s ` +
+    `TEAM_ASSIGN=${TEAM_ASSIGN_DURATION}s ` +
+    `ROUND_INTRO=${ROUND_INTRO_DURATION}s`,
+  );
+}
 
 const PHASES = {
   LOBBY: 'LOBBY',
@@ -169,7 +195,7 @@ function createGameEngine(io) {
     room.teams = assignTeams(playerList);
     // Reset scores
     for (const p of room.players.values()) p.score = 0;
-    room.roundIndex = 0;
+    room.roundIndex = START_ROUND_INDEX;
     room.questionIndex = 0;
     broadcast(room, 'teams-assigned', { teams: publicTeams(room) });
     broadcast(room, 'player-joined', { players: publicPlayers(room) });
