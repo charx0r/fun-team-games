@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import socket from './socket.js';
 import Home from './pages/Home.jsx';
 import Lobby from './pages/Lobby.jsx';
@@ -24,20 +24,68 @@ export default function App() {
   const [finalData, setFinalData] = useState(null);
   const [teamScores, setTeamScores] = useState([]);
   const [error, setError] = useState('');
+  // 'online' once we've connected at least once; 'reconnecting' while the
+  // socket is dropped and retrying; 'offline' only before we ever connect.
+  const [connStatus, setConnStatus] = useState(
+    socket.connected ? 'online' : 'offline'
+  );
+  // Latest room+name, kept in a ref so the socket 'connect' handler (which is
+  // registered once and closes over state) can always see current values.
+  const sessionRef = useRef({ roomCode: '', playerName: '' });
+  // True while we're explicitly trying to resume a previous session. Used to
+  // route join-errors to "room gone, bounce home" instead of the normal
+  // transient error banner.
+  const reconnectingRef = useRef(false);
 
   useEffect(() => {
-    function onRoomCreated({ roomCode, playerId }) {
+    function onRoomCreated({ roomCode, playerId, playerName }) {
       setRoomCode(roomCode);
       setPlayerId(playerId);
+      sessionRef.current = { roomCode, playerName: playerName || '' };
       setIsAdmin(true);
       setView('lobby');
     }
-    function onJoinConfirmed({ roomCode, playerId }) {
+    function onJoinConfirmed({ roomCode, playerId, playerName }) {
       setRoomCode(roomCode);
       setPlayerId(playerId);
-      setView('lobby');
+      sessionRef.current = {
+        roomCode,
+        playerName: playerName || sessionRef.current.playerName,
+      };
+      // A reconnect resume also emits join-confirmed. Don't clobber the
+      // current view back to 'lobby' — the phase-specific events that
+      // follow (teams-assigned, question-start, …) will route us. If we
+      // were still on 'home' it means this is a first-time join.
+      if (reconnectingRef.current) {
+        reconnectingRef.current = false;
+        setConnStatus('online');
+      } else {
+        setView('lobby');
+      }
     }
     function onJoinError({ message }) {
+      // If this error came back in response to a reconnect attempt, the
+      // room was likely torn down (last player left → room deleted). Bail
+      // all the way back to home instead of silently flashing a banner.
+      if (reconnectingRef.current) {
+        reconnectingRef.current = false;
+        sessionRef.current = { roomCode: '', playerName: '' };
+        setConnStatus('online');
+        setRoomCode('');
+        setPlayerId(null);
+        setIsAdmin(false);
+        setPlayers([]);
+        setTeams([]);
+        setRoundInfo(null);
+        setQuestion(null);
+        setReveal(null);
+        setLeaderboard(null);
+        setFinalData(null);
+        setView('home');
+        setError(message || 'Lost connection to the room.');
+        setTimeout(() => setError(''), 6000);
+        return;
+      }
       setError(message);
       setTimeout(() => setError(''), 4000);
     }
@@ -116,6 +164,45 @@ export default function App() {
     };
   }, [playerId]);
 
+  // Connection lifecycle: if the socket drops, Socket.IO keeps trying to
+  // reconnect the transport. Once it's back, if we had an active session
+  // we re-emit join-room so the server can flip our existing player entry
+  // back to connected (it already supports reconnect-by-name) and replay
+  // the current phase snapshot. Without this the user would just sit on a
+  // stale view and show as greyed-out to everyone else forever.
+  useEffect(() => {
+    function onConnect() {
+      const { roomCode: rc, playerName: pn } = sessionRef.current;
+      if (rc && pn) {
+        reconnectingRef.current = true;
+        setConnStatus('reconnecting');
+        socket.emit('join-room', { roomCode: rc, playerName: pn });
+      } else {
+        setConnStatus('online');
+      }
+    }
+    function onDisconnect() {
+      // Only surface a reconnect state if we actually had a session going.
+      // Someone sitting on the home screen doesn't need a red banner.
+      if (sessionRef.current.roomCode) {
+        setConnStatus('reconnecting');
+      } else {
+        setConnStatus('offline');
+      }
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    // If the socket is already connected before this effect runs (common —
+    // autoConnect is true), fire onConnect once so status is correct.
+    if (socket.connected) setConnStatus('online');
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, []);
+
   const myTeam = teams.find(t => t.players.some(p => p.id === playerId)) || null;
 
   const ctx = {
@@ -135,23 +222,42 @@ export default function App() {
     error,
   };
 
+  let page;
   switch (view) {
     case 'home':
-      return <Home error={error} />;
+      page = <Home error={error} />;
+      break;
     case 'lobby':
-      return <Lobby ctx={ctx} />;
+      page = <Lobby ctx={ctx} />;
+      break;
     case 'teams':
-      return <TeamReveal ctx={ctx} />;
+      page = <TeamReveal ctx={ctx} />;
+      break;
     case 'roundIntro':
-      return <RoundIntro ctx={ctx} />;
+      page = <RoundIntro ctx={ctx} />;
+      break;
     case 'game':
     case 'reveal':
-      return <Game ctx={ctx} phase={view} />;
+      page = <Game ctx={ctx} phase={view} />;
+      break;
     case 'leaderboard':
-      return <Leaderboard ctx={ctx} />;
+      page = <Leaderboard ctx={ctx} />;
+      break;
     case 'final':
-      return <FinalResults ctx={ctx} />;
+      page = <FinalResults ctx={ctx} />;
+      break;
     default:
-      return <Home error={error} />;
+      page = <Home error={error} />;
   }
+
+  return (
+    <>
+      {page}
+      {connStatus === 'reconnecting' && (
+        <div className="reconnect-banner" role="status" aria-live="polite">
+          <span className="reconnect-dot" /> Reconnecting…
+        </div>
+      )}
+    </>
+  );
 }

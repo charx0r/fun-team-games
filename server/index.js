@@ -40,7 +40,7 @@ io.on('connection', socket => {
     socket.join(roomCode);
     socket.data.roomCode = roomCode;
     socket.data.playerId = playerId;
-    socket.emit('room-created', { roomCode, playerId });
+    socket.emit('room-created', { roomCode, playerId, playerName: name });
     const room = engine.getRoom(roomCode);
     io.to(roomCode).emit('player-joined', { players: engine.publicPlayers(room) });
   });
@@ -57,7 +57,11 @@ io.on('connection', socket => {
     socket.join(room.code);
     socket.data.roomCode = room.code;
     socket.data.playerId = player.id;
-    socket.emit('join-confirmed', { playerId: player.id, roomCode: room.code });
+    socket.emit('join-confirmed', {
+      playerId: player.id,
+      roomCode: room.code,
+      playerName: player.name,
+    });
     io.to(room.code).emit('player-joined', { players: engine.publicPlayers(room) });
 
     // If reconnecting mid-game, send them the current phase snapshot.
